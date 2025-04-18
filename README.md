@@ -6,229 +6,133 @@
 
 **IUT Le Havre - Cours GIT**
 
-# Compte-rendu TP1 Introduction GIT
+# Compte-rendu TP2 Introduction GIT
 
 
 
-## 1. Configuration de GIT
+## 1. Créer un compte GitHub
 
 
-### 1.1 Votre identité
+Il faut aller sur GitHub et cliquer sur *sign up*.
 
-Afin de définir un nom d'utilisateur et une adresse e-mail sur git il faut utiliser les commandes 
-suivantes dans le terminal :
+Ensuite il faut renplir les champs pour crée son compte.
 
-**Nom d'utilisateur :** *git config --global user.name "`Votre nom`"*  
-**Adresse e-mail :** *git config --global user.email `mail@exemple.com`*  
 
+## 2. Ajouter une nouvelle clé SSH à votre compte GitHub
 
-### 1.2 Votre éditeur
 
-Afin de définir un éditeur de texte il faut utiliser la commande :
+Il faut copier la clé ssh de votre machine, pour l'afficher il faut faire la commande :
 
-**Editeur de texte :** *git config --global core.editor `Votre éditeur de texte`*  
+*cat ~/.ssh/`Nom de votre clé`.pub*
 
+Il faut seulement prendre la clé publique, la clé privée (sans .pub) ne dois jamais être partagée.
 
-### 1.3 Vérification des informations
 
-Afin de vérifier si les informations renseignés sont corrects, on utilise :
+Si il n'existe pas de clé publique/privée dans le répertoire ssh il faut en générer une avec la 
+commande :
 
-*git config --list*  
+*ssh-keygen*
 
-Pour vérifier si le nom et l'e-mail rentrer est correct, il faut utiliser les commandes :
+Après avoir copier votre clé ssh publique, il faut aller sur GitHub, cliquer sur le **profil**, aller 
+dans **settings**, ensuite dans **SSH and GPG keys**, et cliquer sur **New SSH key**.
 
-**Nom d'utilisateur :** *git config user.name*  
-**Adresse e-mail :** *git config user.email*  
+Après cela, il faut remplir le titre et collé la clé copier auparavant dans le cadre *key* et cliqué 
+sur **Add SSH key*.
 
 
+## 3 Pousser un dépôt existant depuis la ligne de commande
 
-## 2. Création d'un dépôt git
 
+3 commandes vont être importantes afin de gérer un répertoire distant :
 
-Pour crée un dépôt git il faut faire la commande :  
+- **git remote :** afin de crée un lien entre notre dépôt local et notre dépôt distant
+- **git push :** pour mettre à jour le dépôt distant à partir de la dernière version du dépôt local.
+- **git pull :** pour mettre à jour le dépôt local à partir de la dernière version du dépôt distant.
 
-*git init*  
 
-Elle doit renvoyer :  
+Afin de crée un dépôt distant il faut aller en haut à droite de l'écran et cliqué sur 
+**New repository**. Cela ouvre un formulaire. Dans ce formulaire on peut mettre un nom de dépôt, 
+une description, choisir de le mettre en publique ou en privé.
 
-	Initialized empty Git repository in `Le chemin vers votre répertoire de travail`/.git/
+Ces étapes permettent de crée un dépôt distant sous la forme d'un lien :
 
+*https://github.com/`Votre nom`/`Le nom du dépôt`.git*
 
-### 2.1 La commande *git status*
 
-La commande *git status* doit afficher : 
+Ensuite il faut choisir l'option SSH. Cela va crée un lien sous la forme :
 
-	On branch master
-	
-	Initial commit
-	
-	nothing to commit (create/copy files and use "git add" to track)
+*git@github.com:`Votre nom`/`le nom du dépôt`.git*
 
 
+Pour vérifié que un dépôt local n'est relier à aucuns dépôt distant il faut que la commande suivante 
+ne renvoie rien :
 
-## 3. Création d'un fichier texte README.md
+*git remote -v*
 
+Pour lier un dépôt local à un dépôt distant il faut faire :
 
-Un fichier README.md est un fichier au format markdown.
+*git remote add origin git@github.com:`Votre nom`/`le nom du dépôt`.git*
 
+Les versions des différents commit sont stockées dans une branch, soit **master** soit **main**.
+Pour connaître cela il faut faire la commande :
 
-### 3.1 Gérer les différentes modifications du fichier README.md
+*git branch*
 
-Lorsque l'on fait la commande *git status* et que ceci s'affiche :
 
-	On branch master
-	
-	Initial commit
-	
-	Untracked files:
-	  (use "git add <file>..." to include in what will be committed)
-	
-		README.md
-	
-	nothing added to commit but untracked files present (use "git add" to track)
+Pour crée le lien il faut faire la commande :
 
-S'il y a le message *Untracked files:* c'est qu'un fichier a été modifier ou crée mais il n'est pas 
-encore dans le dépôt git.
+*git push -u origin master*
 
-Pour sélection un fichier le fichier on fait :
+Après cela, on peut voir sur le lien du projet que les fichiers de notre dépôt distant sont les mêmes 
+que le dépôt local.
 
-*git add `Le nom de votre fichier`*.
 
-Si on refait la commande *git status* cela nous affiche :
+## 4 Séquence de travail avec un dépôt distant
 
-	On branch master
-	
-	Initial commit
-	
-	Changes to be committed:
-	  (use "git rm --cached <file>..." to unstage)
-	
-		new file:   README.md
 
-Nous voyons que le fichier README.md est sélectionner, pour valider l'inclusion on fait :
+Pour récupérer la version la plus récente du dépôt distant il faut faire la commande :
 
-*git commit -m "`Un message décrivant le commite`"*
+*git pull*
 
-Ce qui affiche :
+Pour voir les modifications il faut faire : 
 
-	[master (root-commit) 23782d5] `Message décrivant le commite`
-	 1 file changed, 0 insertions(+), 0 deletions(-)
-	 create mode 100644 README.md
+*git log*
 
-Si on refait un *git status* on obtient :
+Quand notre dépôt local est dans sa dernière version, pour modifier le dépôt distant il faut faire :
 
-	On branch master
-	nothing to commit, working directory clean
+*git push*
 
-Pour voir l'historique des différentes versions il faut faire la commande *git log*.
 
+### Exercice
 
-### 3.2 Différencier 3 états / 3 zones / 3 actions
+On fait : 
 
-Dans un dépôt git il y a 3 états :
+- *git pull*
+- *git log*
 
-- Modifié (modified) : Il y a eu des modifications sur le fichier.
-- Sélectionné (staged) : Le fichier est sélectionné.
-- Validé (commited) : Le fichier est synchroniser avec le dépôt.
+On modifie le fichier `Cryptomonnaie.java`.
 
-Ces états correspondent à 3 zones dans GIT :
+- *git status*
+- *git add `src\Cryptomonnaie.java`*
+- *git commit -m "Ajout de getters et setters"*
+- *git push*
 
-- La copie de travail (directory).
-- La zone de sélection (staging area).
-- Le dépôt où les modifications sont enregistrées sous forme de validations (commits).
+On voit maintenant que le dépôt distant contient les modifications apportées à `Cryptomonnaie.java`.
 
 
-Le passage entre ses 3 états se fait par 3 actions :
+## 5 Cloner un dépôt distant sur notre machine locale
 
-- Sélection (stage) : Sélectionne le fichier *git add*.
-- Validation (commit) : Crée le commit et l'envoie vers le dépôt avec *git commit*.
-- Récupération (checkout) : Récupère un instantané (snapchot) du le dépôt vers la copie de travail.
 
+Pour cela il faut crée un nouveau repository comme vu précédement.
 
+Copié le lien : git@github.com:`Votre nom`/`le nom du dépôt`.git
 
-## 4. Gestion de version d'un programme Java
+Et faire la commande : git clone git@github.com:`Votre nom`/`le nom du dépôt`.git
 
+Il y a désormais un dossier tp2.
 
-Pour crée un fichier java vide on utilise la commande :
 
-**Sur Linux :** *touch `Nom du programme`.java*
+Ensuite on copie colle à la main les fichier existant dans tp1 dans le tp2. Après cela on *git add* 
+et *git commit* tout les fichiers.
 
-**Sur Windows :** *New-Item -Path `Nom du programme`.java -ItemType File*
-
-On édite le fichier avec du code.
-
-Ensuite on fait un *git add src\Cryptomonnaie.java* afin de sélectionner le fichier.
-Après on fait la commande *git commit -m "Première version du fichier Cyptomonnaie.java"*.
-
-La commande *git log* affiche ensuite :
-
-	commit b3220b1690a4aa24187b038261dc445d5ce0e32a (HEAD -> master)
-	Author: Liam GF <tiger76760@gmail.com>
-	Date:   Thu Apr 17 16:31:40 2025 +0200
-
-		Première version du fichier Cyptomonnaie.java
-
-	commit 2ed6106dd9c398dc05958f20bb22819c88d0faad
-	Author: Liam GF <tiger76760@gmail.com>
-	Date:   Thu Apr 17 16:02:16 2025 +0200
-
-		Ajout du compte rendu des 3 premières étapes du cour
-
-	commit fe7d253bbe6242f8709268d386ba05dbccdeb64d
-	Author: Liam GF <tiger76760@gmail.com>
-	Date:   Wed Apr 16 21:23:03 2025 +0200
-
-		Ajoute du fichier README.md
-
-
-### 4.1 Creation du fichier .gitignore
-
-Lorsqu'on compile un fichier .java cela crée un .class. Il est afficher quand on fait *git status* :
-
-	On branch master
-	Untracked files:
-	  (use "git add <file>..." to include in what will be committed)
-		    Cryptomonnaie.class
-	
-	nothing added to commit but untracked files present (use "git add" to track)
-
-Les fichiers .class ne sont pas à enregistrées dans le dépôt git. L'apparition de fichiers .class 
-lorsqu'on fait la commande *git status* est ennuyeuse. Il va donc falloir les ignorer grâce à un 
-fichier nommé *.gitignore*. Pour crée ce fichier on fait la commande :
-
-**Sur Linux :** *touch .gitignore*
-
-**Sur Windows :** *New-Item -Path .gitignore -ItemType File*
-
-Dans ce fichier on met : 
-
-**.class*
-
-On ajoute ce fichier au dépôt git : 
-
-*git add .gitignore*
-*git commit -m ".gitignore ajouté"*
-
-Maintenant lorsqu'on fait *git status* on ne voit plus le fichier .class.
-Les fichiers .class ont été ignorer lors du *git status*.
-
-On peut compléter le fichier *gitignore* avec ceci :
-
-	# Compiled class file
-	*.class
-	
-	# Package Files 
-	*.jar
-	*.war
-	*.nar
-	*.ear
-	*.zip
-	*.tar.gz
-	*.rar
-
-On sélectionne et commit ce fichier : 
-
-*git add .gitignore*
-*git commit -m ".gitignore ajouté"*
-
-Ces ajouts permettent de ne pas afficher les fichiers qui ont ces extensions.
+Lorsque tout est fini, on *git push* afin d'avoir nos fichiers sur le dépôt distant.
